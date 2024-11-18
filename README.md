@@ -2,7 +2,7 @@
 
 Made by: Arnie Sharma
 
-// add here
+This project is meant to be a re-creation of the game _Wordle_, but in C++ and through the terminal. Playing the game is actually quite simple, you just click start to compile the repository and then receive 6 guesses to guess a mystery word that's 5 letters. You gague your score by how many guesses it took you to get the right answer.
 
 # how to run this project (reccomended method):
 1) Use the "gitbash" terminal or a prefered terminal of your own to clone this repository using the https link.
