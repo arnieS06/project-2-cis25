@@ -8,49 +8,58 @@
 #include "Structs.h" 
 using namespace std;
 
-void greetUser() {
+int setDifficulty() {
     cout << "Welcome to wordle, let's see how well you can guess" << endl;
-    cout << "Choose your difficulty --> Easy, (6 guesses) \nMedium, (4 guesses) \nImpossible (2 guesses)" << endl;
-    //pending
+    cout << "Choose your difficulty (enter the number of guesses)--> Easy, (6 guesses) \nMedium, (4 guesses) \nImpossible (2 guesses) : ";
+    int settingDifficulty;
+    cin >> settingDifficulty;
+
+    if (settingDifficulty == 6 || settingDifficulty == 4 || settingDifficulty == 2) {
+        return settingDifficulty;
+    }
+    
+    else {
+        throw invalid_argument("\nYou didn't enter a valid difficulty level, exiting Wordle.");
+    }
 }
 
 void loadWords(const string& filename, GameState& game) {
-   ifstream file(filename); 
+    ifstream file(filename);
 
-   if (!file.is_open()) {
-       cerr << "Error: Could not open file '" << filename << "'. \nPlease try again." << endl;
-       return;
-   }
+    if (!file.is_open()) {
+        cerr << "Error: Could not open file '" << filename << "'. \nPlease try again." << endl;
+        return;
+    }
 
-   string word;
-   while (file >> word) { 
-       game.listOfWords.push_back(word);
-   }
+    string word;
+    while (file >> word) {
+        game.listOfWords.push_back(word);
+    }
 
-   file.close(); 
+    file.close();
 }
 
 vector<char> provideFeedback(const string& targetWord, const string& guess) {
-    vector<char> feedback(guess.size(), '-'); 
-    
+    vector<char> feedback(guess.size(), '-');
+
     for (size_t i = 0; i < guess.size(); ++i) {
         if (guess[i] == targetWord[i]) {
-            feedback[i] = 'C'; 
+            feedback[i] = 'C';
         }
     }
 
     for (size_t i = 0; i < guess.size(); ++i) {
-        if (feedback[i] == 'C') continue; 
+        if (feedback[i] == 'C') continue;
         if (targetWord.find(guess[i]) != string::npos) {
-            feedback[i] = 'M'; // 
+            feedback[i] = 'M'; 
         }
     }
 
     return feedback;
 }
 
-void playWorlde(GameState& game) {
-    int maxAttempts = 6;
+void playWorlde(GameState& game, int maxAttempts) {
+
     game.remainingAttempts = maxAttempts;
     string guess;
 
@@ -101,26 +110,26 @@ void playWorlde(GameState& game) {
 }
 
 int main() {
-   srand(static_cast<unsigned>(time(0))); 
+    srand(static_cast<unsigned>(time(0)));
 
-   GameState game;
+    GameState game;
 
-   loadWords("wordlist.txt", game);
- 
-   if (game.listOfWords.empty()) {
-       cerr << "Words failed to load, please re-compile the program" << endl;
-       return 1;
-   }
+    loadWords("wordlist.txt", game);
 
+    if (game.listOfWords.empty()) {
+        cerr << "Words failed to load, please re-compile the program" << endl;
+        return 1;
+    }
     
-   game.targetWord = game.listOfWords[rand() % game.listOfWords.size()];
+
+    game.targetWord = game.listOfWords[rand() % game.listOfWords.size()];
 
     // Display the chosen word (for debugging; remove later)
-   cout << "Target Word: " << game.targetWord << endl;
+    cout << "Target Word: " << game.targetWord << endl;
 
-   greetUser();
+    int maxAttempts = setDifficulty();
 
-   playWorlde(game);
+    playWorlde(game, maxAttempts);
 
-   return 0;
+    return 0;
 }
