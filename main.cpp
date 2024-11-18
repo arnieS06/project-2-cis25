@@ -4,6 +4,7 @@
 #include <fstream>  
 #include <ctime>
 #include <cstdlib>
+#include <cctype>
 #include "Structs.h" 
 using namespace std;
 
@@ -30,12 +31,11 @@ void loadWords(const string& filename, GameState& game) {
 }
 
 vector<char> provideFeedback(const string& targetWord, const string& guess) {
-    vector<char> feedback(guess.size(), '-'); // Initialize feedback with '-'
-
-    // Check for correct letters in correct positions
+    vector<char> feedback(guess.size(), '-'); 
+    
     for (size_t i = 0; i < guess.size(); ++i) {
         if (guess[i] == targetWord[i]) {
-            feedback[i] = 'C'; // 'C' for Correct
+            feedback[i] = 'C'; 
         }
     }
 
@@ -47,6 +47,57 @@ vector<char> provideFeedback(const string& targetWord, const string& guess) {
     }
 
     return feedback;
+}
+
+void playWorlde(GameState& game) {
+    int maxAttempts = 6;
+    game.remainingAttempts = maxAttempts;
+    string guess;
+
+    // add difficulty systemm here
+
+    cout << "Welcome to Wordle! You have " << maxAttempts << " attempts to guess the word." << endl;
+
+    while (game.remainingAttempts > 0) {
+        cout << "\nEnter your guess (5-letter word): ";
+        cin >> guess;
+
+        for (auto& c : guess) {
+            c = tolower(c);
+        }
+
+        if (guess.size() != 5) {
+            cout << "Invalid guess. Please enter a 5-letter word." << endl;
+            continue;
+        }
+
+        if (find(game.listOfWords.begin(), game.listOfWords.end(), guess) == game.listOfWords.end()) {
+            cout << "Word not in the list. Try again." << endl;
+            continue;
+        }
+
+        game.guesses.push_back(guess);
+
+        vector<char> feedback = provideFeedback(game.targetWord, guess);
+
+        cout << "Feedback: ";
+        for (char f : feedback) {
+            cout << f << " ";
+        }
+        cout << endl;
+
+        if (guess == game.targetWord) {
+            cout << "Congratulations! You guessed the word. I didn't think you could do it. \nYour answer: " << game.targetWord << endl;
+            return;
+        }
+
+        --game.remainingAttempts;
+        cout << "Remaining attempts: " << game.remainingAttempts << endl;
+
+    }
+
+    cout << "Out of attempts! The word was: " << game.targetWord << endl;
+
 }
 
 int main() {
