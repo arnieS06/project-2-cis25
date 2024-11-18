@@ -1,35 +1,49 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <fstream>
+#include <fstream>  
 #include <ctime>
 #include <cstdlib>
-#include "Structs.h"
-#include "wordList.h"
+#include "Structs.h" 
 using namespace std;
 
-vector<string> loadWords(const string& filename) {
-    vector<string> words;
-    ifstream file(filename);
-    string word;
+void loadWords(const string& filename, GameState& game) {
+   ifstream file(filename); 
 
-    while (file >> word) {
-        words.push_back(word);
-    }
+   if (!file.is_open()) {
+       cerr << "Error: Could not open file '" << filename << "'!" << endl;
+       return;
+   }
 
-    return words;
+   string word;
+   while (file >> word) { 
+       game.listOfWords.push_back(word);
+   }
+
+   file.close(); 
 }
 
 
-// these are the imports I think I will need for now
+
 int main() {
-    GameState game;
+   srand(static_cast<unsigned>(time(0))); 
 
-    game.listOfWords = loadWords("wordlist.txt");
+   GameState game;
 
-    for (const auto& word : game.listOfWords) {
-        cout << word << endl;
-    }
+   
+   loadWords("wordlist.txt", game);
+
+    
+   if (game.listOfWords.empty()) {
+       cerr << "No words were loaded. Exiting program." << endl;
+       return 1;
+   }
+
+    
+   game.targetWord = game.listOfWords[rand() % game.listOfWords.size()];
+
+    // Display the chosen word (for debugging; remove later)
+   cout << "Target Word: " << game.targetWord << endl;
+
+   return 0;
 }
-
-
