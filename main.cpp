@@ -10,8 +10,8 @@ using namespace std;
 
 void greetUser() {
     cout << "Welcome to wordle, let's see how well you can guess" << endl;
-    cout << "Choose your difficulty --> Easy, (6 guesses) \nMedium, (4 guesses) \nImpossible (2 guesses)";
-
+    cout << "Choose your difficulty --> Easy, (6 guesses) \nMedium, (4 guesses) \nImpossible (2 guesses)" << endl;
+    //pending
 }
 
 void loadWords(const string& filename, GameState& game) {
@@ -56,7 +56,7 @@ void playWorlde(GameState& game) {
 
     // add difficulty systemm here
 
-    cout << "Welcome to Wordle! You have " << maxAttempts << " attempts to guess the word." << endl;
+    cout << "You have " << maxAttempts << " attempts to guess the word." << endl;
 
     while (game.remainingAttempts > 0) {
         cout << "\nEnter your guess (5-letter word): ";
@@ -119,6 +119,8 @@ int main() {
    cout << "Target Word: " << game.targetWord << endl;
 
    greetUser();
+
+   playWorlde(game);
 
    return 0;
 }
