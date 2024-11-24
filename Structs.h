@@ -6,7 +6,7 @@
 struct GameState {
 	std::vector<std::string> listOfWords;
 	std::string targetWord;
-	int remainingAttempts;
+	int remainingAttempts = 0;
 	std::vector<std::string> guesses;
 };
 
