@@ -5,21 +5,42 @@
 #include <ctime>
 #include <cstdlib>
 #include <cctype>
+#include <stdexcept>
 #include "Structs.h" 
 using namespace std;
 
 int setDifficulty() {
     cout << "Welcome to wordle, let's see how well you can guess" << endl;
-    cout << "Choose your difficulty (enter the number of guesses)--> Easy, (6 guesses) \nMedium, (4 guesses) \nImpossible (2 guesses) : ";
+    cout << "Let's start with a player nickname. Enter your one-word name: ";
+    string *playerName[1];
+    playerName[0] = new string;
+    cin >> *playerName[0];
+
+    if (cin.fail()) {
+        throw runtime_error("Error: No valid name entered.");
+    }
+
+    cout << "\n-PLAYER'S KEY- When the program gives feedback, dashes mean the letter you entered is not in the word."
+        << "\n'C' means that the letter is in the right position and it is in the word."
+        << "\n'M' means that the letter is in the word, but not in the right position." << endl;
+
+    cout << "\n" << endl;
+
+    cout << "Choose your difficulty " << *playerName[0] << ", (enter the number of guesses): \nEasy, (6 guesses) \nMedium, (4 guesses) \nImpossible (2 guesses) : ";
     int settingDifficulty;
     cin >> settingDifficulty;
+
+    cout << "\n" << endl;
+
+    delete playerName[0];
+    playerName[0] = nullptr;
 
     if (settingDifficulty == 6 || settingDifficulty == 4 || settingDifficulty == 2) {
         return settingDifficulty;
     }
-    
+
     else {
-        throw invalid_argument("\nYou didn't enter a valid difficulty level, exiting Wordle.");
+        throw runtime_error("\nYou didn't enter a valid difficulty level, exiting Wordle.");
     }
 }
 
@@ -49,9 +70,10 @@ vector<char> provideFeedback(const string& targetWord, const string& guess) {
     }
 
     for (size_t i = 0; i < guess.size(); ++i) {
-        if (feedback[i] == 'C') continue;
+        if (feedback[i] == 'C') 
+            continue;
         if (targetWord.find(guess[i]) != string::npos) {
-            feedback[i] = 'M'; 
+            feedback[i] = 'M';
         }
     }
 
@@ -120,12 +142,13 @@ int main() {
         cerr << "Words failed to load, please re-compile the program" << endl;
         return 1;
     }
-    
+
 
     game.targetWord = game.listOfWords[rand() % game.listOfWords.size()];
 
     // Display the chosen word (for debugging; remove later)
-    cout << "Target Word: " << game.targetWord << endl;
+    cout << "Target Word: " << game.targetWord  << " (This is here so that the project can be tested over and over. Use it if needed)" << endl;
+    cout << "\n";
 
     int maxAttempts = setDifficulty();
 
